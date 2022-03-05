@@ -10,7 +10,7 @@ public class Globals {
     /**
      * Holds the median data for all the supported symbols
      */
-    public static volatile HashMap<String, SymbolData> medianData = new HashMap<>();
+    public static volatile CustomHashMap<String, SymbolData> medianData = new CustomHashMap<>();
 
     /**
      * Supported symbols by Binance, in turn by the App.

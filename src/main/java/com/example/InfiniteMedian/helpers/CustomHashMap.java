@@ -9,11 +9,22 @@ public class CustomHashMap<K, V>{
         table = new Entry[SIZE];
     }
 
+    private int getHash(K key){
+        String _key = key.toString();
+        int[] specialPrimesList = {41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97};
+
+        int hash = 0;
+        for (int i=0; i<_key.length() && i<13; i++){
+            hash+= ((int) _key.charAt(i)) * specialPrimesList[i];
+        }
+        return hash;
+    }
+
     public void put(K key, V value){
-        int hash = key.hashCode() % SIZE;
-        Entry<K, V> entry = table[Math.abs(hash)];
+        int hash = getHash(key) % SIZE;
+        Entry<K, V> entry = table[hash];
         if (entry == null){
-            table[Math.abs(hash)] = new Entry<>(key, value);
+            table[hash] = new Entry<>(key, value);
         }else{
             while(entry.next != null){
                 if (entry.getKey() == key){
@@ -32,8 +43,8 @@ public class CustomHashMap<K, V>{
     }
 
     public V get(K key){
-        int hash = key.hashCode() % SIZE;
-        Entry<K, V> entry = table[Math.abs(hash)];
+        int hash = getHash(key) % SIZE;
+        Entry<K, V> entry = table[hash];
         if (entry == null){
             return null;
         }
@@ -49,8 +60,8 @@ public class CustomHashMap<K, V>{
 
     public boolean containsKey(K key){
         return !(this.get(key) == null);
-//        int hash = key.hashCode() % SIZE;
-//        Entry<K, V> entry = table[Math.abs(hash)];
+//        int hash = getHash(key) % SIZE;
+//        Entry<K, V> entry = table[hash];
 //        if (entry == null){
 //            return  false;
 //        }
@@ -64,13 +75,13 @@ public class CustomHashMap<K, V>{
     }
 
     public Entry<K, V> remove(K key){
-        int hash = key.hashCode() % SIZE;
-        Entry<K, V> entry = table[Math.abs(hash)];
+        int hash = getHash(key) % SIZE;
+        Entry<K, V> entry = table[hash];
         if (entry == null){
             return  null;
         }
         if (entry.getKey() == key){
-            table[Math.abs(hash)] = entry.next;
+            table[hash] = entry.next;
             entry.next = null;
             return entry;
         }
@@ -114,5 +125,6 @@ public class CustomHashMap<K, V>{
         public void setValue(V value){
             this.value = value;
         }
+
     }
 }
