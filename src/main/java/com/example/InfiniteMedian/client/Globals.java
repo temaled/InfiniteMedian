@@ -1,5 +1,6 @@
 package com.example.InfiniteMedian.client;
 
+import com.example.InfiniteMedian.helpers.CustomHashMap;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
