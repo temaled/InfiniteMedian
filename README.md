@@ -6,7 +6,7 @@ A simple java code that calculates median of stream of data from [Binance](https
 ## Run App
 
 ```bash
-git clone keybase://team/temaled_yisfa/temaled_yisfa
+git clone https://github.com/temaled/InfiniteMedian.git
 
 cd InfiniteMedian
 
