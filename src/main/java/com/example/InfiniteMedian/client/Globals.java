@@ -6,9 +6,24 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 public class Globals {
+    /**
+     * Holds the median data for all the supported symbols
+     */
     public static volatile HashMap<String, SymbolData> medianData = new HashMap<>();
+
+    /**
+     * Supported symbols by Binance, in turn by the App.
+     * Fetched at the start of the program
+     */
     public static JSONArray supportedSymbols;
 
+    /**
+     * Gets the up tod ate info about a particular info
+     * @param symbolName the name of the symbol from Binance trade data
+     * @return a JSON object containing the symbol name, the median, the latest price
+     * and number of data used calculating the median so far
+     * @see Globals#medianData
+     */
     public static JSONObject getMedianInfo(String symbolName){
         if (medianData.containsKey(symbolName.toLowerCase())){
             SymbolData target = medianData.get(symbolName.toLowerCase());
@@ -24,10 +39,18 @@ public class Globals {
         }
     }
 
+    /**
+     * Performs calculation and updates {@link Globals#medianData}
+     * for a particular symbol
+     * @param message message from {@link SocketClient#onMessage(String)}
+     * to be consumed
+     */
     public static void consumeData(String message){
         JSONObject newData = new JSONObject(message).getJSONObject("data");
         String symbolName = newData.get("s").toString().toLowerCase();
         if (Globals.medianData.containsKey(symbolName)){
+            // updating info about a particular info
+            // this will be executed when the 2nd or later data arrives
             SymbolData data =  Globals.medianData.get(symbolName);
             double newPrice = newData.getDouble("p");
             if (newPrice < data.lowestPrice){
@@ -40,6 +63,7 @@ public class Globals {
             data.numberOfData++;
 
         }else{
+            // adding new symbol to medianData, this will be executed only once for a particular symbol
             Globals.medianData.put(symbolName, new SymbolData(symbolName, 1, newData.getDouble("p"), newData.getDouble("p") ));
         }
     }

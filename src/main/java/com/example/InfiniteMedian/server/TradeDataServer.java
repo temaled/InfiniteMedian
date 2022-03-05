@@ -8,10 +8,21 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
+/**
+ * A controller class to manage routes and serve data
+ * about supported symbols and latest trade info for
+ * a particular Binance trade symbol
+ */
 @SpringBootApplication
 @RequestMapping("/")
 @RestController
 public class TradeDataServer {
+    /**
+     * Gets list of all the supported symbols
+     * @return a json response containing all the supported symbols
+     * @see Globals#supportedSymbols
+     */
     @RequestMapping(
             value = "/",
             method = RequestMethod.GET,
@@ -27,6 +38,12 @@ public class TradeDataServer {
         }
     }
 
+    /**
+     * Gets info about the requested trade symbol
+     * @param symbolName name of the trade symbols
+     * @return a json response containing info about the particular symbol
+     * @see Globals#getMedianInfo(String)
+     */
     @RequestMapping(
             value = "/{symbolName}",
             method = RequestMethod.GET,

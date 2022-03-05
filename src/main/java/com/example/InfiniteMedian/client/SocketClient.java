@@ -5,6 +5,9 @@ import org.java_websocket.handshake.ServerHandshake;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+/**
+ * A WebSocket client class customized for InfiniteMedian app
+ */
 public class SocketClient extends WebSocketClient {
     SocketServiceData dataContext;
 
@@ -23,6 +26,15 @@ public class SocketClient extends WebSocketClient {
         System.out.println("Opened Connection to "+dataContext.URI.substring(0,100) +". . .");
     }
 
+    /**
+     * An overridden method to run when message is received from Binance Streaming API
+     * updates the {@link SocketServiceData} object attribute then
+     * calls the {@link Globals#consumeData(String)} method to perform median calculation
+     * on the new arrived message
+     * @param message message received
+     * @see Globals#consumeData(String)
+     * @see SocketServiceData
+     */
     @Override
     public void onMessage(String message) {
         dataContext.lastMessage = message;
