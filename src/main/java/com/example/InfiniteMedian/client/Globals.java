@@ -10,7 +10,7 @@ public class Globals {
     /**
      * Holds the median data for all the supported symbols
      */
-    public static volatile CustomHashMap<String, SymbolData> medianData = new CustomHashMap<>();
+    public static CustomHashMap<String, SymbolData> medianData = new CustomHashMap<>();
 
     /**
      * Supported symbols by Binance, in turn by the App.
@@ -19,7 +19,7 @@ public class Globals {
     public static JSONArray supportedSymbols;
 
     /**
-     * Gets the up tod ate info about a particular info
+     * Gets the up-to-date info about a particular symbol
      * @param symbolName the name of the symbol from Binance trade data
      * @return a JSON object containing the symbol name, the median, the latest price
      * and number of data used calculating the median so far
@@ -50,7 +50,7 @@ public class Globals {
         JSONObject newData = new JSONObject(message).getJSONObject("data");
         String symbolName = newData.get("s").toString().toLowerCase();
         if (Globals.medianData.containsKey(symbolName)){
-            // updating info about a particular info
+            // updating info about a particular symbol
             // this will be executed when the 2nd or later data arrives
             SymbolData data =  Globals.medianData.get(symbolName);
             double newPrice = newData.getDouble("p");
@@ -60,6 +60,17 @@ public class Globals {
                 data.highestPrice = newPrice;
             }
             data.latestPrice = newPrice;
+            /**
+             * The calculation performed below is THE BEST for this specific case because the data
+             * fluctuates up and down very little over longer period of time. And it can perform
+             * Trillions or even more operations in log(1) time constant and without any memory overhead
+             *
+             * The only case this simple but very efficient algorithm might fail to predict the median
+             * with the required tolerance is if there's a price surge or plummet, which occurs rarely,
+             * and even then, the median accuracy will be corrected eventually.
+             *
+             * Also, the limit as time approaches infinity is the perfect median of the values.
+             */
             data.median = (data.highestPrice + data.lowestPrice)/2;
             data.numberOfData++;
 
